@@ -240,9 +240,9 @@ def proof_command_wrapper(prooffunc, category_name, command_name, change, multi=
 def super_prove():
     return par.sp(check_trace=True)
 
-proof_command_wrapper(super_prove,  'HWMCC', '/super_prove_aiger',  0, write_cex=True, bmc_depth=False)
-proof_command_wrapper(par.simple,  'HWMCC', '/simple_aiger',  0, write_cex=True, bmc_depth=True)
-proof_command_wrapper(par.mp,  'HWMCC', '/multi_prove_aiger',  0, write_cex=True, bmc_depth=False, multi=True)
+proof_command_wrapper(super_prove,  'HWMCC', '/super_prove_aiger',  0, write_cex=False, bmc_depth=False)
+proof_command_wrapper(par.simple,  'HWMCC', '/simple_aiger',  0, write_cex=False, bmc_depth=True)
+proof_command_wrapper(par.mp,  'HWMCC', '/multi_prove_aiger',  0, write_cex=False, bmc_depth=False, multi=True)
 
 def simple_liveness_prooffunc(aig_filename, old_stdout):
 
@@ -309,7 +309,7 @@ def simple_liveness_prooffunc(aig_filename, old_stdout):
         import traceback
         traceback.print_exc()
 
-proof_command_wrapper_internal( simple_liveness_prooffunc, "HWMCC", "/simple_liveness_aiger", 0, multi=True)
+proof_command_wrapper_internal( simple_liveness_prooffunc, "HWMCC", "/simple_liveness_aiger", 0, multi=False)
 
 @contextmanager
 def frame_done_callback(callback):
@@ -344,7 +344,7 @@ def bmcs_prooffunc(aig_filename, old_stdout):
         return 'UNKNOWN'
 
 
-proof_command_wrapper_internal( bmcs_prooffunc, "HWMCC", "/bmcs_aiger", 0, multi=False, bmc_depth=True, write_cex=True)
+proof_command_wrapper_internal( bmcs_prooffunc, "HWMCC", "/bmcs_aiger", 0, multi=False, bmc_depth=True, write_cex=False)
 
 
 def super_deep(aig_filename, old_stdout):
@@ -374,7 +374,7 @@ def super_deep(aig_filename, old_stdout):
 
         if status == pyabc.SAT:
             with temp_filename() as fname:
-                pyabc.run_command('write_cex -a %s'%fname)
+                # pyabc.run_command('write_cex -a %s'%fname)
                 with open(fname, 'r') as fin:
                     cex = fin.read().split('\n')[:-1]
             
@@ -493,4 +493,4 @@ def super_deep(aig_filename, old_stdout):
     os._exit(0)
 
 
-proof_command_wrapper_internal( super_deep, "HWMCC", "/super_deep_aiger", 0, multi=False, bmc_depth=False, write_cex=True, do_reporting=False)
+proof_command_wrapper_internal( super_deep, "HWMCC", "/super_deep_aiger", 0, multi=False, bmc_depth=False, write_cex=False, do_reporting=False)
